@@ -8,9 +8,9 @@ const app = new Hono<{
 		DATABASE_URL: string
     JWT_SECRET: string,
 	},
-  Variables:{
+	Variables:{
     userId:string
-  }
+}
 }>();
 
 app.use('/api/v1/blog/*', async (c, next) => {
@@ -73,31 +73,32 @@ app.post('/api/v1/signin', async (c) => {
 })
 
 app.get('/api/v1/blog/:id', (c) => {
-  const id = c.req.param('id')
-  console.log(id);
-  return c.text('get blog route')
+	const id = c.req.param('id')
+	console.log(id);
+	return c.text('get blog route')
 })
 
 app.post('/api/v1/blog', async (c)=>{
-  const userId = c.get('userId');
-  const prisma = new PrismaClient({
+    const userId = c.get('userId');
+    const prisma = new PrismaClient({
     datasourceUrl: c.env?.DATABASE_URL,
-  }).$extends(withAccelerate());
+    }).$extends(withAccelerate());
 
-  const body = await c.req.json();
-  const post = await prisma.post.create({
+    const body = await c.req.json();
+    const post = await prisma.post.create({
     data:{
-      title: body.title,
-      content: body.content,
-      authorId:userId
+    title: body.title,
+    content: body.content,
+    authorId:userId
     }
-  });
-  return c.json ({
+});
+return c.json ({
     id: post.id
-  });
+});
 })
 
 app.put('/api/v1/blog', (c) => {
+	console.log(c.get('userId'));
 	return c.text('signin route')
 })
 
